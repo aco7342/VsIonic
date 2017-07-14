@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "bcryptjs": "registry:dt/bcryptjs#2.4.0+20170109141314",
+    "google-maps": "registry:dt/google-maps#3.2.1+20161129151841"
+  },
+  "devDependencies": {},
+  "globalDependencies": {
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160317120654",
+    "jquery": "registry:dt/jquery#1.10.0+20170310222111"
+  }
+}

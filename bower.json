@@ -1,0 +1,27 @@
+{
+  "name": "ionic-hello-world",
+  "description": "Ionic test: An Ionic project",
+  "main": "index.js",
+  "authors": [
+    "Ionic Framework"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ng-videojs": "^1.1.7",
+    "angular": "~1.5.5",
+    "angular-sanitize": "~1.5.5",
+    "jquery": "~1.11.1",
+    "video.js": "~4.6.3",
+    "angular-animate": "~1.5.5",
+    "hls.js": "^0.7.10",
+    "ngCordova": "^0.1.27-alpha"
+  }
+}
