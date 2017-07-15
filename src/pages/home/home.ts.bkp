@@ -1,0 +1,181 @@
+import { Component } from '@angular/core';
+import { Platform } from 'ionic-angular';
+import { AuthService } from '../../providers/auth-service';
+import { NavController, App, LoadingController, ToastController } from 'ionic-angular';
+import { LoginPage } from '../login/login';
+
+//import * as $ from "jquery";
+
+//import jQuery from "jquery";
+
+//https://x-team.com/blog/include-javascript-libraries-in-an-ionic-2-typescript-project/
+
+interface MyType {
+  video: HTMLMediaElement;
+  hls: any;
+}
+
+declare var  Hls: any;
+
+@Component({
+  selector: 'page-home',
+  templateUrl: 'home.html'
+})
+export class HomePage {
+  loading: any;
+  isLoggedIn: boolean = false;
+  platformList: string = '';
+  isApp: boolean = true;
+  subscription : any;
+  subscriptionCritical : any;
+  subscriptionLow : any;
+  nav : any;
+  public meuvideoCtrl: MyType[] ;
+  public vidindex: number =0;
+
+  constructor(public app: App, public navCtrl: NavController, public authService: AuthService, public loadingCtrl: LoadingController, private toastCtrl: ToastController, public platform: Platform) {
+
+	this.nav = navCtrl; //https://stackoverflow.com/questions/36723830/ionic2-check-if-page-is-active
+	console.log( 'HomePage is active ',  this.nav.root.name == "HomePage" );
+
+	for (var i = 0; i < 2 ; i++) {
+      let NewVideoId = '#video'+i;
+      if(Hls.isSupported()) {
+         let video : HTMLMediaElement = <HTMLMediaElement> document.getElementById(NewVideoId);
+         let hls = new Hls();
+         let tmp_ = { "video": video, "hls": hls};
+         this.meuvideo.push(tmp_);
+      }
+    }
+
+    let platforms = this.platform.platforms();
+    this.platformList = platforms.join(', ');
+
+    if (this.platform.is('core') || this.platform.is('mobileweb')) {
+        this.isApp = false;
+	}
+
+	platform.ready().then((source) => {
+	  if(localStorage.getItem("token")) {
+          this.isLoggedIn = true;
+      } else {
+	      this.isLoggedIn = false;
+	  }
+
+	  console.log('home.ts.65 ' + this.platformList + ' ' + this.isApp , ' source:' , source , ' HomePage is active ',  this.nav.root.name == "HomePage" , 'is Logged?' , this.isLoggedIn);
+	  if ((this.nav.root.name == "HomePage") && (this.isLoggedIn) ){
+           this.vidindex = 0;
+	         meuvideo('video1','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
+		     meuvideo('video2','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
+	  }	else {
+		  suspendvideo();
+	  }
+    });
+
+  function suspendvideo (){
+      for (var i = 0; i <= this.meuvideoCtrl.length() ; i++) {
+        this.meuvideoCtrl[i].hls.stopLoad();
+        this.meuvideoCtrl[i].hls.detachMedia();
+        this.meuvideoCtrl[i].video.muted = true;
+        this.meuvideoCtrl[i].video.pause();
+        this.meuvideoCtrl[i].video.src="";
+        console.log( 'home.ts.82 video.readyState:' , this.meuvideoCtrl[i].video.readyState , ' Muted:' , this.meuvideoCtrl[i].video.muted , ' paused:' , this.meuvideoCtrl[i].video.paused , ' src:' , this.meuvideoCtrl[i].video.src , ' i:' , i);
+      }
+  }
+
+	function meuvideo(videoId , videoUrl){
+							let NewVideoId = '#'+ videoId;
+							console.log('home.ts.88 meuvideo()',videoId,' ',NewVideoId );
+  							if(Hls.isSupported()) { //https://github.com/video-dev/hls.js/tree/master
+								let video : HTMLMediaElement = <HTMLMediaElement> document.getElementById(videoId);
+								video.onloadstart = function() {
+										console.log("Starting to load video");
+								};
+								video.onwaiting = function () {
+										console.log("waiting");
+								};
+								video.oncanplay = function () {
+										console.log("canplay");
+								};
+								video.onseeking = function () {
+										console.log("seeking");
+								};
+								  video.onplaying = function () {
+										console.log("Playing");
+								};
+								let hls = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
+								let tmp_ = { "video": video, "hls": hls};
+								console.log('home.ts.108.hls.video.play() video.readyStare:',video.readyState);
+								hls.loadSource(videoUrl);
+								hls.attachMedia(video);
+								this.meuvideoCtrl[this.vidindex++] = tmp_ ;
+								hls.on(Hls.Events.MANIFEST_PARSED,function() {
+								video.play();
+									video.muted = true;
+									console.log('home.ts.115. video[0].play();');
+								});
+							} else {
+									console.log('home.ts.118.hls.is not supported');
+							}
+    }
+  }
+
+  logout() {
+	var token = localStorage.getItem("token");
+    var suspendvideO = () => {
+        for (var i = 0; i <= this.vidindex ; i++) {
+          this.meuvideoCtrl[i].hls.stopLoad();
+          this.meuvideoCtrl[i].hls.detachMedia();
+          this.meuvideoCtrl[i].video.muted = true;
+          this.meuvideoCtrl[i].video.pause();
+          this.meuvideoCtrl[i].video.src="";
+          console.log( 'home.ts.132 video.readyState:' , this.meuvideoCtrl[i].video.readyState , ' Muted:' , this.meuvideoCtrl[i].video.muted , ' paused:' , this.meuvideoCtrl[i].video.paused , ' src:' , this.meuvideoCtrl[i].video.src , ' i:' , i);
+        }
+    };
+// with block body, explicit "return" needed
+	console.log('home.ts.136 logout: ' + JSON.stringify(logoutData) );
+	//this.showLoader();
+	if (token) {
+		  var logoutData = { sessionId : token };
+		  this.authService.logout(logoutData).then((result) => {
+		      console.log('home.ts.141 result: ' + result  + ' ' + JSON.stringify(logoutData) );
+		      //this.loading.dismiss();
+		      localStorage.clear();
+		      this.isLoggedIn = false;
+		      suspendvideO();
+		      this.navCtrl.setRoot(LoginPage);
+		  }, (err) => {
+		    //this.loading.dismiss();
+		    console.log('home.ts.149 logout err: ' + err  );
+		    this.presentToast(err);
+		  });
+	} else {
+		  suspendvideO();
+		  this.navCtrl.setRoot(LoginPage);
+    }
+  }
+
+  showLoader(){
+    this.loading = this.loadingCtrl.create({
+        content: '(home.ts Authenticating...'
+    });
+
+    this.loading.present();
+  }
+
+  presentToast(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      position: 'bottom',
+      dismissOnPageChange: true
+    });
+
+    toast.onDidDismiss(() => {
+      console.log('Dismissed toast');
+    });
+
+    toast.present();
+  }
+
+}

@@ -16,24 +16,26 @@ declare var  Hls: any;
 })
 export class HomePage {
   loading: any;
-  isLoggedIn: boolean = false;
+  isLoggedIn: boolean = false;  
   platformList: string = '';
   isApp: boolean = true;
   subscription : any;
   subscriptionCritical : any;
   subscriptionLow : any;
+  public HlsLocal: any;
   nav : any;
 
   constructor(public app: App, public navCtrl: NavController, public authService: AuthService, public loadingCtrl: LoadingController, private toastCtrl: ToastController, public platform: Platform/*, public device: Device , public geolocation: Geolocation,public batteryStatus: BatteryStatus*/) {
+    this.HlsLocal = Hls;
     this.nav = navCtrl; //https://stackoverflow.com/questions/36723830/ionic2-check-if-page-is-active
-    console.log( 'HomePage is active ',  this.nav.root.name == "HomePage" );
+    console.log( 'HomePage is active ',  this.nav.root.name == "HomePage" );        
     let platforms = this.platform.platforms();
     this.platformList = platforms.join(', ');
 
     if (this.platform.is('core') || this.platform.is('mobileweb')) {
         this.isApp = false;
     }
-
+    
     function suspendvideo(){
     }
 
@@ -41,16 +43,13 @@ export class HomePage {
       if(localStorage.getItem("token")) {
           this.isLoggedIn = true;
       } else {
-          this.isLoggedIn = false;
+          this.isLoggedIn = false;  
       }
 
       console.log('home.ts.67 ' + this.platformList + ' ' + this.isApp , ' source:' , source , ' HomePage is active ',  this.nav.root.name == "HomePage" , 'is Logged?' , this.isLoggedIn);
       if ((this.nav.root.name == "HomePage") && (this.isLoggedIn) ){
          meuvideo('video1','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
          meuvideo('video2','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
-         meuvideo('video3','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
-         meuvideo('video4','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
-
       } else {
           suspendvideo();
       }
@@ -60,7 +59,7 @@ export class HomePage {
                             let NewVideoId = '#'+ videoId;
                             console.log('home.ts.78 meuvideo()',videoId,' ',NewVideoId );
                             if(Hls.isSupported()) { //https://github.com/video-dev/hls.js/tree/master
-                                let video : HTMLMediaElement = <HTMLMediaElement> document.getElementById(videoId);
+                                let video : HTMLMediaElement = <HTMLMediaElement> document.getElementById(videoId); 
                                 let hls = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
                                 console.log('home.ts.97.hls.video.play() video.readyStare:',video.readyState);
                                 hls.loadSource(videoUrl);
@@ -72,12 +71,12 @@ export class HomePage {
                                 });
                             } else {
                                     console.log('home.ts.106.hls.is not supported');
-                            }
+                            }                           
     }
   }
-
+   
   logout() {
-    var token = localStorage.getItem("token");
+    var token = localStorage.getItem("token");  
     console.log('home.ts.113 logout: ' + JSON.stringify(logoutData) );
     //this.showLoader();
     if (token) {
@@ -92,7 +91,7 @@ export class HomePage {
           //this.loading.dismiss();
           console.log('home.ts.126 logout err: ' + err  );
           this.presentToast(err);
-        });
+        });     
     } else {
         this.navCtrl.setRoot(LoginPage);
     }
