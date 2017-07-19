@@ -10,9 +10,9 @@
   <link rel="icon" type="image/x-icon" href="assets/icon/favicon.ico">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4e8ef7">
-  
+
   <link rel="stylesheet" href="bower_components/video.js/dist/video-js/video-js.css">
-  
+
    <script src="bower_components/angular/angular.js"></script>
    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
    <script src="bower_components/angular-animate/angular-animate.js"></script>
@@ -20,7 +20,7 @@
    <script src="bower_components/video.js/dist/video-js/video.js"></script>
    <script src="bower_components/hls.js/dist/hls.js"></script>
    <script src="bower_components/ngCordova/dist/ng-cordova.js"></script>
-  
+
   <!-- cordova.js required for cordova apps -->
   <script src="cordova.js"></script>
 
@@ -40,29 +40,29 @@
 
   <!-- Ionic's root component and where the app will load -->
   <ion-app>
-  			<!--div>
-  					<div >
-					    <video class="video-container" id="video1" controls="controls" style="width:320px;height:200px;"></video>
-						<script>
-							console.log('home.html.24')
-							console.dir( Hls );
-								
-  							if(Hls.isSupported()) {
-								var video = document.getElementById('video1');
-								video.muted= true;
-								var hls = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
-								hls.loadSource('http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
-								hls.attachMedia(video);
-								hls.on(Hls.Events.MANIFEST_PARSED,function() {									
-									video.play();
-									console.log('hls.video.play()')
-								});
-							}
-						</script>				
+            <!--div>
+                    <div >
+                        <video class="video-container" id="video1" controls="controls" style="width:320px;height:200px;"></video>
+                        <script>
+                            console.log('home.html.24')
+                            console.dir( Hls );
 
-					</div>				
+                            if(Hls.isSupported()) {
+                                var video = document.getElementById('video1');
+                                video.muted= true;
+                                var hls = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
+                                hls.loadSource('http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
+                                hls.attachMedia(video);
+                                hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                                    video.play();
+                                    console.log('hls.video.play()')
+                                });
+                            }
+                        </script>
 
-			</div-->
+                    </div>
+
+            </div-->
   </ion-app>
 
   <!-- The polyfills js is generated during the build process -->
@@ -70,6 +70,6 @@
 
   <!-- The bundle js is generated during the build process -->
   <script src="build/main.js"></script>
-
+  <!--script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA366zC4x6Y6vS5PAtqisQyWfBBUz1sUzc&sensor=true"></script-->
 </body>
 </html>

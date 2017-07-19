@@ -3,6 +3,7 @@ import { Platform } from 'ionic-angular';
 import { AuthService } from '../../providers/auth-service';
 import { NavController, App, LoadingController, ToastController } from 'ionic-angular';
 import { LoginPage } from '../login/login';
+//import { ScreenOrientation } from 'ionic-native';
 
 //import * as $ from "jquery";
 
@@ -38,18 +39,22 @@ export class HomePage {
     }
 
     platform.ready().then((source) => {
+        
+      //ScreenOrientation.lockOrientation('portrait');
+//    ScreenOrientation.lockOrientation('landscape');
+        
       if(localStorage.getItem("token")) {
           this.isLoggedIn = true;
       } else {
           this.isLoggedIn = false;
       }
 
-      console.log('home.ts.67 ' + this.platformList + ' ' + this.isApp , ' source:' , source , ' HomePage is active ',  this.nav.root.name == "HomePage" , 'is Logged?' , this.isLoggedIn);
+      console.log('home.ts.67 ' + this.platformList + ' isApp: ' + this.isApp , ' source:' , source , ' HomePage is active ',  this.nav.root.name == "HomePage" , 'is Logged?' , this.isLoggedIn);
       if ((this.nav.root.name == "HomePage") && (this.isLoggedIn) ){
          meuvideo('video1','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
          meuvideo('video2','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
-         meuvideo('video3','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
-         meuvideo('video4','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
+        // meuvideo('video3','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
+        // meuvideo('video4','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
 
       } else {
           suspendvideo();
@@ -62,7 +67,7 @@ export class HomePage {
                             if(Hls.isSupported()) { //https://github.com/video-dev/hls.js/tree/master
                                 let video : HTMLMediaElement = <HTMLMediaElement> document.getElementById(videoId);
                                 let hls = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
-                                console.log('home.ts.97.hls.video.play() video.readyStare:',video.readyState);
+                                console.log('home.ts.97.hls.video.play() ');
                                 hls.loadSource(videoUrl);
                                 hls.attachMedia(video);
                                 hls.on(Hls.Events.MANIFEST_PARSED,function() {
@@ -94,6 +99,7 @@ export class HomePage {
           this.presentToast(err);
         });
     } else {
+        this.isLoggedIn = false;
         this.navCtrl.setRoot(LoginPage);
     }
   }

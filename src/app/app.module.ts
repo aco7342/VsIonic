@@ -9,6 +9,9 @@ import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 import { AuthService } from '../providers/auth-service';
 
+//import { StatusBar, Splashscreen, Geolocation,Device,Network,BatteryStatus } from 'ionic-native';
+//import { GoogleMap, GoogleMapsEvent, GoogleMapsMarker, GoogleMapsLatLng} from 'ionic-native';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -32,6 +35,19 @@ import { AuthService } from '../providers/auth-service';
     LoginPage,
     RegisterPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, AuthService]
+  providers: [
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    AuthService
+    //,StatusBar,
+    //Splashscreen,
+    //BatteryStatus,
+    //GoogleMap,
+    //GoogleMapsEvent,
+    //GoogleMapsMarker,
+    //GoogleMapsLatLng,
+    //Geolocation,
+    //Device,
+    //Network
+    ]
 })
 export class AppModule {}
