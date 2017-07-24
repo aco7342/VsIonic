@@ -12,10 +12,10 @@ import { LoginPage } from '../login/login';
 declare var  Hls: any;
 
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'nuvem-home',
+  templateUrl: 'nuvem.html'
 })
-export class HomePage {
+export class NuvemPage {
   loading: any;
   isLoggedIn: boolean = false;
   platformList: string = '';
@@ -32,7 +32,7 @@ export class HomePage {
   constructor(public app: App, public navCtrl: NavController, public authService: AuthService, public loadingCtrl: LoadingController, private toastCtrl: ToastController, public platform: Platform/*, public device: Device , public geolocation: Geolocation,public batteryStatus: BatteryStatus*/) {
     this.nav = navCtrl; //https://stackoverflow.com/questions/36723830/ionic2-check-if-page-is-active
     this._app = app;
-    console.log( 'HomePage is active ',  this.nav.root.name == "HomePage" );
+    console.log( 'NuvemPage is active ',  this.nav.root.name == "NuvemPage" );
     let platforms = this.platform.platforms();
     this.platformList = platforms.join(', ');
 
@@ -54,16 +54,22 @@ export class HomePage {
           this.isLoggedIn = false;
       }
 
-      console.log('home.ts.54 ' + this.platformList + ' isApp: ' + this.isApp , ' source:' , source , ' HomePage is active ',  this.nav.root.name == "HomePage" , 'is Logged?' , this.isLoggedIn);
-      if ((this.nav.root.name == "HomePage") && (this.isLoggedIn) ){
+      console.log('nuvem.ts.54 ' + this.platformList + ' isApp: ' + this.isApp , ' source:' , source , ' NuvemPage is active ',  this.nav.root.name == "NuvemPage" , 'is Logged?' , this.isLoggedIn);
+      if ((this.nav.root.name == "NuvemPage") && (this.isLoggedIn) ){
           
   //       for ( let i=0; i < this.vetor.length ; i++)
   //           this.vetor.pop();
          
          meuvideo('video1','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
          meuvideo('video2','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
-        // meuvideo('video3','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
-        // meuvideo('video4','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
+         meuvideo('video3','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
+         meuvideo('video4','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
+         
+         meuvideo('video5','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
+         meuvideo('video6','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
+         meuvideo('video7','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
+         meuvideo('video8','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
+         
 
       } else {
           suspendvideo();
@@ -72,35 +78,35 @@ export class HomePage {
 
     function meuvideo(videoId , videoUrl){
                             let NewVideoId = '#'+ videoId;
-                            console.log('home.ts.68 meuvideo()',videoId,' ',NewVideoId );
+                            console.log('nuvem.ts.68 meuvideo()',videoId,' ',NewVideoId );
                             if(Hls.isSupported()) { //https://github.com/video-dev/hls.js/tree/master
                                 let video : HTMLMediaElement = <HTMLMediaElement> document.getElementById(videoId);
                                 let hls = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
                                 //this.vetor.push( new Hls() ); //bks.push(new Book());
-                                console.log('home.ts.72.hls.video.play() ');
+                                console.log('nuvem.ts.72.hls.video.play() ');
                                 hls.loadSource(videoUrl);                     /* this.vetor[ this.vetor.length ].loadSource(videoUrl);  //*/
                                 hls.attachMedia(video);                       /* this.vetor[ this.vetor.length ].attachMedia(video) //*/
                                 hls.on(Hls.Events.MANIFEST_PARSED,function() {/* this.vetor[ this.vetor.length ].on(Hls.Events.MANIFEST_PARSED,function() {  //*/
                                     video.play();
                                     video.muted = true;
-                                    console.log('home.ts.83. video[0].play();');
+                                    console.log('nuvem.ts.83. video[0].play();');
                                 });
                             } else {
-                                    console.log('home.ts.86.hls.is not supported');
+                                    console.log('nuvem.ts.86.hls.is not supported');
                             }
     }
   }
 
   logout() {
     var token = localStorage.getItem("token");
-    console.log('home.ts.93 logout: ' + JSON.stringify(logoutData) );
+    console.log('nuvem.ts.93 logout: ' + JSON.stringify(logoutData) );
     //document.querySelector("ion-tabbar").style.display = 'none';
     //document.querySelector('#tabs ion-tabbar-section')['style'].display = 'none';
     //this.showLoader();
     if (token) {
         var logoutData = { sessionId : token };
         this.authService.logout(logoutData).then((result) => {
-          console.log('home.ts.98 result: ' + result  + ' ' + JSON.stringify(logoutData) );
+          console.log('nuvem.ts.98 result: ' + result  + ' ' + JSON.stringify(logoutData) );
           //this.loading.dismiss();
           localStorage.clear();
           this.isLoggedIn = false;
@@ -108,12 +114,12 @@ export class HomePage {
           this._app.getRootNav().setRoot(LoginPage);
         }, (err) => {
           //this.loading.dismiss();
-          console.log('home.ts.105 logout err: ' + err  );
+          console.log('nuvem.ts.105 logout err: ' + err  );
           this.presentToast(err);
         });
     } else {
         this.isLoggedIn = false;
-        console.log('home.ts.113 ');
+        console.log('nuvem.ts.113 ');
         //this.navCtrl.setRoot(LoginPage);
         this._app.getRootNav().setRoot(LoginPage);
     }
@@ -121,7 +127,7 @@ export class HomePage {
 
   showLoader(){
     this.loading = this.loadingCtrl.create({
-        content: '(home.ts Authenticating...'
+        content: '(nuvem.ts Authenticating...'
     });
 
     this.loading.present();
