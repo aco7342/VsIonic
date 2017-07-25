@@ -78,9 +78,7 @@ export class AboutPage {
                console.log('Error getting location', error);
             });
             
-            let nivel = 3;
-            if (data)
-               nivel = data.usuarios.nivel;
+            let nivel = this.data.usuarios.nivel;
             console.log('about.ts.ready.80 source:',source, ' isApp:' , this.isApp);
             this.loadMap();
             console.log('about.ts.ready.82');

@@ -11,6 +11,11 @@ import { LoginPage } from '../login/login';
 
 declare var  Hls: any;
 
+let vetor : any = [];
+let idexterno = '';
+let wsLogin:boolean = false;
+let nr : number = 0;
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -25,9 +30,6 @@ export class HomePage {
   subscriptionLow : any;
   nav : any;
   _app : any;
-  
-//  vetor : any[] = []; //https://stackoverflow.com/questions/16233266/arrays-in-type-script
-                      //var bks: Book[] = [];
 
   constructor(public app: App, public navCtrl: NavController, public authService: AuthService, public loadingCtrl: LoadingController, private toastCtrl: ToastController, public platform: Platform/*, public device: Device , public geolocation: Geolocation,public batteryStatus: BatteryStatus*/) {
     this.nav = navCtrl; //https://stackoverflow.com/questions/36723830/ionic2-check-if-page-is-active
@@ -35,7 +37,6 @@ export class HomePage {
     console.log( 'HomePage is active ',  this.nav.root.name == "HomePage" );
     let platforms = this.platform.platforms();
     this.platformList = platforms.join(', ');
-
     if (this.platform.is('core') || this.platform.is('mobileweb')) {
         this.isApp = false;
     }
@@ -54,16 +55,42 @@ export class HomePage {
           this.isLoggedIn = false;
       }
 
-      console.log('home.ts.54 ' + this.platformList + ' isApp: ' + this.isApp , ' source:' , source , ' HomePage is active ',  this.nav.root.name == "HomePage" , 'is Logged?' , this.isLoggedIn);
+      console.log('home.ts.62 ' + this.platformList + ' isApp: ' + this.isApp , ' source:' , source , ' HomePage is active ',  this.nav.root.name == "HomePage" , 'is Logged?' , this.isLoggedIn);
       if ((this.nav.root.name == "HomePage") && (this.isLoggedIn) ){
-          
-  //       for ( let i=0; i < this.vetor.length ; i++)
-  //           this.vetor.pop();
-         
+         //let data = JSON.parse( localStorage.getItem("data") ) ;
+         //for(let x=0; x < 2; x++) {
+         //}
          meuvideo('video1','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
          meuvideo('video2','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
-        // meuvideo('video3','http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8');
-        // meuvideo('video4','http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8');
+         
+         let _data = JSON.parse( localStorage.getItem("data") ) ;
+         let apiWs = 'ws://192.168.1.34:1880/ws/simple' ;
+         
+         if (_data)
+             idexterno = _data.usuarios.idexterno;
+         console.log('ws0');
+         let ws = new WebSocket( apiWs , []);
+         console.log('ws1');
+         // Set the function to be called when a message is received.
+         ws.onopen = () => {
+           console.log('open');
+           wsLogin = true;
+         };
+
+         ws.onmessage = (event) => {
+           console.log('new message: ' + event.data);
+           localStorage.setItem('ws', JSON.stringify(event.data));
+           ws.send('abCdEfg..'+ (nr++) );
+         };
+
+         ws.onerror = () => {
+           console.log('error occurred!');
+         };
+
+         ws.onclose = (event) => {
+           wsLogin = false;
+           console.log('close code=' + event.code);
+         };
 
       } else {
           suspendvideo();
@@ -76,15 +103,26 @@ export class HomePage {
                             if(Hls.isSupported()) { //https://github.com/video-dev/hls.js/tree/master
                                 let video : HTMLMediaElement = <HTMLMediaElement> document.getElementById(videoId);
                                 let hls = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
-                                //this.vetor.push( new Hls() ); //bks.push(new Book());
                                 console.log('home.ts.72.hls.video.play() ');
-                                hls.loadSource(videoUrl);                     /* this.vetor[ this.vetor.length ].loadSource(videoUrl);  //*/
-                                hls.attachMedia(video);                       /* this.vetor[ this.vetor.length ].attachMedia(video) //*/
-                                hls.on(Hls.Events.MANIFEST_PARSED,function() {/* this.vetor[ this.vetor.length ].on(Hls.Events.MANIFEST_PARSED,function() {  //*/
+                                hls.loadSource(videoUrl);                     
+                                hls.attachMedia(video);                       
+                                hls.on(Hls.Events.MANIFEST_PARSED,function() {
                                     video.play();
                                     video.muted = true;
-                                    console.log('home.ts.83. video[0].play();');
+                                    console.log('home.ts.83. video[0].play() elem:' , this.elem);
                                 });
+                                
+                                /* let hls = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
+                                console.log('home.ts.72.hls.video.play() ', this.elem++);
+                                hls.loadSource(videoUrl);                     
+                                hls.attachMedia(video);                       
+                                hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                                    video.play();
+                                    video.muted = true;
+                                    console.log('home.ts.83. video[0].play() elem:' , this.elem);
+                                }); */
+
+                                
                             } else {
                                     console.log('home.ts.86.hls.is not supported');
                             }
@@ -94,8 +132,6 @@ export class HomePage {
   logout() {
     var token = localStorage.getItem("token");
     console.log('home.ts.93 logout: ' + JSON.stringify(logoutData) );
-    //document.querySelector("ion-tabbar").style.display = 'none';
-    //document.querySelector('#tabs ion-tabbar-section')['style'].display = 'none';
     //this.showLoader();
     if (token) {
         var logoutData = { sessionId : token };
