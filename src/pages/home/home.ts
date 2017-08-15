@@ -3,15 +3,35 @@ import { Platform } from 'ionic-angular';
 import { AuthService } from '../../providers/auth-service';
 import { NavController, App, LoadingController, ToastController } from 'ionic-angular';
 import { LoginPage } from '../login/login';
+//import { Observable } from 'rxjs/Observable';
+//import { Observer} from 'rxjs/Observer';
+//import { EventEmitter } from '@angular/core';
+
+//import { LoginPage } from '../ihls';
+
 //import { ScreenOrientation } from 'ionic-native';
 
 //import * as $ from "jquery";
 
 //https://x-team.com/blog/include-javascript-libraries-in-an-ionic-2-typescript-project/
 
+export interface Ihls { //C:\vs02\ionic2-rest-authentication-master\node_modules\@types\hls.js\index.d.ts
+    
+    //attachMedia(videoElement: HTMLVideoElement): void;
+    attachMedia(videoElement: any): void;
+    detachMedia(): void;
+    loadSource(source: string): void;
+    startLoad(startPosition?: number): void;
+    stopLoad(): void;
+    recoverMediaError(): void;
+    destroy(): void;
+    on(event: string, callback: (event: string, data: any) => void): void;
+    off(event: string, callback: (event: string, data: any) => void): void;
+}
+
 declare var  Hls: any;
 
-let vetor : any = [];
+let vetor : any[] = [];
 let idexterno = '';
 let wsLogin:boolean = false;
 let nr : number = 0;
@@ -55,7 +75,7 @@ export class HomePage {
           this.isLoggedIn = false;
       }
 
-      console.log('home.ts.62 ' + this.platformList + ' isApp: ' + this.isApp , ' source:' , source , ' HomePage is active ',  this.nav.root.name == "HomePage" , 'is Logged?' , this.isLoggedIn);
+      console.log('home.ts.78 ' + this.platformList + ' isApp: ' + this.isApp , ' source:' , source , ' HomePage is active ',  this.nav.root.name == "HomePage" , 'is Logged?' , this.isLoggedIn);
       if ((this.nav.root.name == "HomePage") && (this.isLoggedIn) ){
          //let data = JSON.parse( localStorage.getItem("data") ) ;
          //for(let x=0; x < 2; x++) {
@@ -79,7 +99,7 @@ export class HomePage {
          };
 
          ws.onmessage = (event) => {
-           console.log('new message: ' + event.data);
+          // console.log('new message: ' + event.data);
            localStorage.setItem('ws', JSON.stringify(event.data));
            ws.send('abCdEfg..'+ (nr++) );
          };
@@ -100,47 +120,63 @@ export class HomePage {
 
     function meuvideo(videoId , videoUrl){
                             let NewVideoId = '#'+ videoId;
-                            console.log('home.ts.68 meuvideo()',videoId,' ',NewVideoId );
+                            console.log('home.ts.123 meuvideo()',videoId,' ',NewVideoId );
                             if(Hls.isSupported()) { //https://github.com/video-dev/hls.js/tree/master
+/*                            
                                 let video : HTMLMediaElement = <HTMLMediaElement> document.getElementById(videoId);
-                                let hls = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
-                                console.log('home.ts.72.hls.video.play() ');
+                                let hls :Ihls  = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
+                                console.log('home.ts.121.hls.video.play() videoUrl:', videoUrl);
                                 hls.loadSource(videoUrl);                     
                                 hls.attachMedia(video);                       
-                                console.log( hls );
-                                console.dir( hls );
-                                //console.log( JSON.stringify(hls)) ;
                                 hls.on(Hls.Events.MANIFEST_PARSED,function() {
                                     video.play();
                                     video.muted = true;
-                                    console.log('home.ts.83. video[0].play() elem:' , this.elem);
+                                    console.log('home.ts.130. video[0].play() elem:');
                                 });
-                                
-                                /* let hls = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
-                                console.log('home.ts.72.hls.video.play() ', this.elem++);
+                                */
+                                let video : HTMLMediaElement = <HTMLMediaElement> document.getElementById(videoId);
+                                let hls :Ihls  = new Hls(); //http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8
+                                console.log('home.ts.139.hls.video.play() videoUrl:', videoUrl);
                                 hls.loadSource(videoUrl);                     
                                 hls.attachMedia(video);                       
                                 hls.on(Hls.Events.MANIFEST_PARSED,function() {
                                     video.play();
                                     video.muted = true;
-                                    console.log('home.ts.83. video[0].play() elem:' , this.elem);
-                                }); */
-
-                                
+                                    console.log('home.ts.145');
+                                    vetor.push( hls );
+                                });
                             } else {
-                                    console.log('home.ts.86.hls.is not supported');
+                                    console.log('home.ts.149.hls.is not supported'); 
                             }
     }
+  }
+  
+  ionViewWillEnter() {
+      console.log('home.ts.155 ionViewWillEnter ' );
+  } 
+  ionViewWillLeave() {
+      this.desligaTudo();
+  }  
+  desligaTudo(){
+    console.log('home.ts.159 ionViewWillLeave' , vetor.length );
+    for(let x = vetor.length; x > -1; x--) {
+        let _hls:Ihls = vetor[x] ;
+        console.log('home.ts.162 video:' , x );
+        _hls.stopLoad();
+        _hls.destroy() ;
+        vetor.splice(x, 1);        
+    }      
   }
 
   logout() {
     var token = localStorage.getItem("token");
-    console.log('home.ts.93 logout: ' + JSON.stringify(logoutData) );
+    //this.desligaTudo();
+    console.log('home.ts.171 logout: ' + token );
     //this.showLoader();
     if (token) {
         var logoutData = { sessionId : token };
         this.authService.logout(logoutData).then((result) => {
-          console.log('home.ts.98 result: ' + result  + ' ' + JSON.stringify(logoutData) );
+          console.log('home.ts.176 result: ' + result  + ' ' + JSON.stringify(logoutData) );
           //this.loading.dismiss();
           localStorage.clear();
           this.isLoggedIn = false;
@@ -148,12 +184,12 @@ export class HomePage {
           this._app.getRootNav().setRoot(LoginPage);
         }, (err) => {
           //this.loading.dismiss();
-          console.log('home.ts.105 logout err: ' + err  );
+          console.log('home.ts.184 logout err: ' + err  );
           this.presentToast(err);
         });
     } else {
         this.isLoggedIn = false;
-        console.log('home.ts.113 ');
+        console.log('home.ts.189 ');
         //this.navCtrl.setRoot(LoginPage);
         this._app.getRootNav().setRoot(LoginPage);
     }

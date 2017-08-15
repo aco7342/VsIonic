@@ -23,15 +23,14 @@ export class MyApp {
   isApp: boolean = true;
   Device : any;
   Coord : any;
+  connectSubscription : any;
+  subscription : any;
   constructor(platform: Platform /*, public screenOrientation: ScreenOrientation*/) {
     if (platform.is('core') || platform.is('mobileweb')) {
        this.isApp = false;
     }
     localStorage.setItem('isApp', this.isApp ? '1' : '0');
     platform.ready().then((source) => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      
       //ScreenOrientation.lockOrientation('portrait');
       //ScreenOrientation.lockOrientation('landscape');
       //this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
@@ -43,36 +42,22 @@ export class MyApp {
 
       this.networkType ='(none)';
       localStorage.setItem('rede', this.networkType);
-      let connectSubscription = Network.onConnect().subscribe(() => {
-         this.networkType = Network.type;
-         console.log('app.components.ts.41 Network:'+this.networkType);
-         localStorage.setItem('rede', this.networkType);
-      });
-      //console.log( 'app.components.ts.45.navigator.connection.type:' , navigator.connection.type );
 
-      let subscription = BatteryStatus.onChange().subscribe(
-        (status) => {
-            this.Level = status.level;
-            console.log('app.components.ts.50 battery level:', status.level, ' isPlugged:' , status.isPlugged);
-            localStorage.setItem('bateria', JSON.stringify(status));
-        }
-      );
-      //console.log('UUid:',Device.uuid);
-         this.Coord = { latitude:-23.5498723  , longitude:-46.6361756 } ; //-23.5498723,-46.6361756
-         let position = JSON.stringify(this.Coord);
-         console.log('app.components.ts.57 position ' + position);
-         localStorage.setItem('coord', position);
-         Geolocation.getCurrentPosition().then((pos) => {
-            let meupos = pos.coords;
-            //console.dir(meupos);
-            this.Coord = { latitude: meupos.latitude , longitude: meupos.longitude };
-            position = JSON.stringify(this.Coord);
-            console.log('app.components.ts.64 position ' + position);
-            localStorage.setItem('coord', position );
-            this.Coord = pos.coords;
-         }).catch((error) => {
-            console.log('Error getting location', error);
-         });
+      this.Coord = { latitude:-23.5498723  , longitude:-46.6361756 } ; //-23.5498723,-46.6361756
+      let position = JSON.stringify(this.Coord);
+      console.log('app.components.ts.57 position ' + position);
+      localStorage.setItem('coord', position);
+      Geolocation.getCurrentPosition().then((pos) => {
+        let meupos = pos.coords;
+        //console.dir(meupos);
+        this.Coord = { latitude: meupos.latitude , longitude: meupos.longitude };
+        position = JSON.stringify(this.Coord);
+        console.log('app.components.ts.64 position ' + position);
+        localStorage.setItem('coord', position );
+        this.Coord = pos.coords;
+      }).catch((error) => {
+         console.log('Error getting location', error);
+      });
       if (/*Device.uuid*/this.isApp){
          this.Device = Device;
          localStorage.setItem('device', JSON.stringify(this.Device));
@@ -89,5 +74,27 @@ export class MyApp {
          console.log('app.components.82.UUid:','Simulator'); 
       }
     });
+  }
+  
+  ionViewWillEnter() {
+      console.log('app.components.80 ionViewWillEnter ' );
+      this.connectSubscription = Network.onConnect().subscribe(() => {
+         this.networkType = Network.type;
+         console.log('app.components.ts.89 Network:'+this.networkType);
+         localStorage.setItem('rede', this.networkType);
+      });
+      this.subscription = BatteryStatus.onChange().subscribe(
+        (status) => {
+            this.Level = status.level;
+            console.log('app.components.ts.90 battery level:', status.level, ' isPlugged:' , status.isPlugged);
+            localStorage.setItem('bateria', JSON.stringify(status));
+        }
+      );
+  }
+ 
+  ionViewWillLeave() {
+    console.log('app.components.96 ionViewWillLeave ' );    
+    this.subscription.unsubscribe(); 
+    this.connectSubscription.unsubscribe(); 
   }
 }
