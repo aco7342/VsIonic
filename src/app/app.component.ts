@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
-import { StatusBar, Splashscreen, Geolocation,Device,Network,BatteryStatus/* ,BatteryStatusResponse */ } from 'ionic-native';
+import { StatusBar, Splashscreen, Geolocation,Device,Network,BatteryStatus } from 'ionic-native';
+//import { ScreenOrientation } from 'ionic-native'; //http://ionic168.rssing.com/chan-53730660/all_p933.html
+//import { ScreenOrientation } from '@ionic-native/screen-orientation';
 //import { StatusBar } from '@ionic-native/status-bar';
 //import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -21,7 +23,7 @@ export class MyApp {
   isApp: boolean = true;
   Device : any;
   Coord : any;
-  constructor(platform: Platform) {
+  constructor(platform: Platform /*, public screenOrientation: ScreenOrientation*/) {
     if (platform.is('core') || platform.is('mobileweb')) {
        this.isApp = false;
     }
@@ -29,6 +31,10 @@ export class MyApp {
     platform.ready().then((source) => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
+      
+      //ScreenOrientation.lockOrientation('portrait');
+      //ScreenOrientation.lockOrientation('landscape');
+      //this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
 
       console.log('app.components.ts.33 isApp:', this.isApp , ' source:' , source);
       StatusBar.styleDefault();

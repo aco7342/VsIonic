@@ -65,6 +65,7 @@ export class HomePage {
          
          let _data = JSON.parse( localStorage.getItem("data") ) ;
          let apiWs = 'ws://192.168.1.34:1880/ws/simple' ;
+         apiWs = 'ws://localhost:1880/ws/simple' ;
          
          if (_data)
              idexterno = _data.usuarios.idexterno;
@@ -106,6 +107,9 @@ export class HomePage {
                                 console.log('home.ts.72.hls.video.play() ');
                                 hls.loadSource(videoUrl);                     
                                 hls.attachMedia(video);                       
+                                console.log( hls );
+                                console.dir( hls );
+                                //console.log( JSON.stringify(hls)) ;
                                 hls.on(Hls.Events.MANIFEST_PARSED,function() {
                                     video.play();
                                     video.muted = true;

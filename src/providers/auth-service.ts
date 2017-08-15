@@ -6,7 +6,8 @@ import 'rxjs/add/operator/map';
 //let apiUrl = 'http://localhost:1880/';
 //let apiUrl = 'http://192.168.1.35:1880/';
 //let apiUrl = 'http://192.168.1.34:1880/';
-let _Url =  '//192.168.1.34:1880';
+//let _Url =  '//192.168.1.34:1880';
+let _Url =  '//localhost:1880';
 let apiUrl = 'http:' + _Url + '/';
 
 let apiWs = 'ws:' + _Url ;

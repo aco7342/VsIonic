@@ -19,6 +19,7 @@
         "@angular/platform-browser": "2.2.1",
         "@angular/platform-browser-dynamic": "2.2.1",
         "@angular/platform-server": "2.2.1",
+        "@ionic-native/screen-orientation": "^4.1.0",
         "@ionic/storage": "1.1.7",
         "cordova-android": "^6.2.3",
         "cordova-plugin-battery-status": "^1.2.4",
@@ -28,14 +29,17 @@
         "cordova-plugin-geolocation": "^2.4.3",
         "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
         "cordova-plugin-network-information": "^1.3.3",
+        "cordova-plugin-screen-orientation": "^2.0.1",
         "cordova-plugin-splashscreen": "^4.0.3",
         "cordova-plugin-statusbar": "^2.2.1",
         "cordova-plugin-whitelist": "^1.3.1",
+        "es6-promise-plugin": "git+https://github.com/vstirbu/PromisesPlugin.git",
         "hls.js": "^0.7.10",
         "ionic-angular": "2.1.0",
         "ionic-native": "2.4.1",
         "ionic-plugin-keyboard": "^2.2.1",
         "ionicons": "3.0.0",
+        "node-red-contrib-http-multipart": "^0.3.2",
         "rxjs": "5.0.0-beta.12",
         "sw-toolbox": "3.4.0",
         "zone.js": "0.6.26"
@@ -83,7 +87,8 @@
             "cordova-plugin-network-information": {},
             "cordova-plugin-googlemaps": {
                 "API_KEY_FOR_ANDROID": "AIzaSyBN-gzU2_LHoApuq_8r7JdXSCvwpPvqSts"
-            }
+            },
+            "cordova-plugin-screen-orientation": {}
         },
         "platforms": [
             "android"
